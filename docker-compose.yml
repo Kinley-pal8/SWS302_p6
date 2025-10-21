@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: practical6_localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # External services port range
+    environment:
+      - SERVICES=s3,iam,logs,sts
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - PERSISTENCE=1
+    volumes:
+      - "./localstack-data:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./init-scripts:/etc/localstack/init/ready.d"
+    networks:
+      - practical6-network
+
+networks:
+  practical6-network:
+    driver: bridge
